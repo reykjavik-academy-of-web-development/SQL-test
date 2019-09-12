@@ -24,7 +24,17 @@ app.get("/",(req,res)=>{
         res.send(results)
     });
 })
+app.get("/comment",(req,res)=>{
+    db.query('SELECT * FROM comment',(error, results)=> {
+        if (error) throw error;
+        console.log(results);
+        res.send(results)
+    });
+})
 
+app.post("/POST-Comment", (req, res)=> {
+    db.query(`INSERT INTO comment(Title, Text, concertsID) VALUES("${req.body.name}","${req.body.comment}","${req.body.ID}")`)
+})
 app.listen("3001",()=>{
     console.log("blah 3001");
 })
