@@ -1,5 +1,6 @@
 const mysql = require('mysql');
 const password = require('./secret/donotread');
+const fetch = require('isomorphic-fetch');
 
 const db = mysql.createConnection({
     host: 'localhost',
@@ -34,4 +35,15 @@ db.query(`CREATE TABLE IF NOT EXISTS comment (
 )`, (error, results)=> {
     if (error) throw error;
     console.log(results);
+})
+
+fetch('https://apis.is/concerts')
+.then(res=>res.json())
+.then(json=>{
+    json.results.map((concert,i)=>{
+        db.query(`INSERT INTO concerts(eventDateName,name,dateOfShow,image)
+        VALUES ("${concert.eventDateName}","${concert.name}","${concert.dateOfShow}",
+        "${concert.imageSource}")`
+        )
+    })
 })
